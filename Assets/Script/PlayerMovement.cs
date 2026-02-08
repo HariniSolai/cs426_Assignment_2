@@ -8,7 +8,13 @@ using Unity.Netcode;
 // extension of MonoBehaviour that has functions related to multiplayer
 public class PlayerMovement : NetworkBehaviour
 {
-    public float speed = 2f;
+    //public float speed = 2f;
+
+    //adding rigidbody so there is no player drifiting. 
+    public float speed = 25f;
+    public float rotationSpeed = 90f;
+    private Rigidbody rb;
+
     // create a list of colors
     public List<Color> colors = new List<Color>();
 
@@ -30,7 +36,10 @@ public class PlayerMovement : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
 
+        // Prevent physics rotation drift
+        rb.freezeRotation = true;
     }
     // Update is called once per frame
     void Update()
@@ -40,25 +49,17 @@ public class PlayerMovement : NetworkBehaviour
         // not on the other prefabs 
         if (!IsOwner) return;
 
-        Vector3 moveDirection = new Vector3(0, 0, 0);
-
+        // Forward / backward movement
         if (Input.GetKey(KeyCode.W))
-        {
-            moveDirection.z = +1f;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            moveDirection.z = -1f;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            moveDirection.x = -1f;
-        }
+            rb.linearVelocity += transform.forward * speed * Time.deltaTime;
+        else if (Input.GetKey(KeyCode.S))
+            rb.linearVelocity -= transform.forward * speed * Time.deltaTime;
+
+        // Rotation (yaw only)
         if (Input.GetKey(KeyCode.D))
-        {
-            moveDirection.x = +1f;
-        }
-        transform.position += moveDirection * speed * Time.deltaTime;
+            transform.rotation *= Quaternion.Euler(0, rotationSpeed * Time.deltaTime, 0);
+        else if (Input.GetKey(KeyCode.A))
+            transform.rotation *= Quaternion.Euler(0, -rotationSpeed * Time.deltaTime, 0);
 
 
         // if I is pressed spawn the object 
