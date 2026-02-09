@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4047356191569965040}
   - component: {fileID: 772400759366984866}
   - component: {fileID: 6834796679887509191}
-  - component: {fileID: 1182623666707698454}
+  - component: {fileID: 4673329609728312684}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 43778272
+  GlobalObjectIdHash: 3581159283
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -232,7 +232,7 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &1182623666707698454
+--- !u!114 &4673329609728312684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -243,5 +243,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cff6f851d64c548ba91c9b3f90c64538, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Target
-  ShowTopMostFoldoutHeaderGroup: 1
+  m_EditorClassIdentifier: '::'
