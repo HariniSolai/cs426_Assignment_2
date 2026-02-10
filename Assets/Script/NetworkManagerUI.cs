@@ -56,6 +56,14 @@ public class NetworkManagerUI : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
+    //HideUI() - helper method to clear the screen of buttons and input field
+    private void HideUI()
+    {
+        host_btn.gameObject.SetActive(false);
+        client_btn.gameObject.SetActive(false);
+        joinCodeInputField.gameObject.SetActive(false);
+    }
+
     // Start host relay
     public async void StartHostRelay()
     {
@@ -84,6 +92,7 @@ public class NetworkManagerUI : MonoBehaviour
 
         // display the join code
         joinCodeText.text = joinCode;
+        HideUI();
     }
 
     // start client relay
@@ -110,6 +119,8 @@ public class NetworkManagerUI : MonoBehaviour
 
         // start client
         NetworkManager.Singleton.StartClient();
-    }
 
+        joinCodeText.text = "";
+        HideUI();
+    }
 }

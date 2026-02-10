@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2178445207
+  GlobalObjectIdHash: 2027137761
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -360,12 +360,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   ShowTopMostFoldoutHeaderGroup: 1
   speed: 10
+  maxSpeed: 10
+  rotationSpeed: 90
+  cannon: {fileID: 1308251238900707035}
+  bullet: {fileID: 7732627488107933226, guid: 5a99e903cd01f41c1a0d1d82a8e07d23, type: 3}
+  bulletLifetime: 3
   colors:
   - {r: 0.22331783, g: 0.24887906, b: 0.9622642, a: 1}
   - {r: 0.93207544, g: 0.5734493, b: 0.32182977, a: 1}
   spawnedPrefab: {fileID: 8220265548356838825, guid: 8c3cec07901bb4749854c17d6356a1b1, type: 3}
-  cannon: {fileID: 1308251238900707035}
-  bullet: {fileID: 7732627488107933226, guid: 5a99e903cd01f41c1a0d1d82a8e07d23, type: 3}
   audioListener: {fileID: 3247687023773720070}
   playerCamera: {fileID: 7067514492782104373}
 --- !u!114 &1333344251541607148
