@@ -362,13 +362,17 @@ MonoBehaviour:
   speed: 10
   maxSpeed: 10
   rotationSpeed: 90
+  dashForce: 40
+  dashCooldown: 1.5
   cannon: {fileID: 1308251238900707035}
   bullet: {fileID: 7732627488107933226, guid: 5a99e903cd01f41c1a0d1d82a8e07d23, type: 3}
+  bulletForce: 1000
+  shootCooldown: 0.4
   bulletLifetime: 3
   colors:
   - {r: 0.22331783, g: 0.24887906, b: 0.9622642, a: 1}
   - {r: 0.93207544, g: 0.5734493, b: 0.32182977, a: 1}
-  spawnedPrefab: {fileID: 8220265548356838825, guid: 8c3cec07901bb4749854c17d6356a1b1, type: 3}
+  spawnedPrefab: {fileID: 110427889724667761, guid: 740728f854d793848a530ac50ca86174, type: 3}
   audioListener: {fileID: 3247687023773720070}
   playerCamera: {fileID: 7067514492782104373}
 --- !u!114 &1333344251541607148

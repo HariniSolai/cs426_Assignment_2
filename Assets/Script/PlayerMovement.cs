@@ -18,15 +18,24 @@ public class PlayerMovement : NetworkBehaviour
     public float maxSpeed = 10.0f; //speed clamper max
     public float rotationSpeed = 90f; //turning speed
 
+    //header for adjusting player ability configurations
+    [Header("Dashing Settings")]
+    public float dashForce = 40f; //power of the squasher's burst
+    public float dashCooldown = 1.5f; //time between dashes
+
     //header for adjusting bullet configuration
     [Header("Bullet Settings")]
     public GameObject cannon; //bullet spawn point
     public GameObject bullet; //bullet prefab
+    public float bulletForce = 1500;
+    public float shootCooldown = 0.4f; //time between shots
     public float bulletLifetime = 3.0f; //time before bullet is destroyed
 
     //header for adjusting network configurations
     [Header("Network Settings")]
     public List<Color> colors = new List<Color>(); //list of colors for player identification
+    private bool isShooter; //boolean to assign role of player
+    private float lastAbilityTime; //time for tracking the last use of assigned ability
     
     //getting the reference to the prefab
     [SerializeField]
@@ -62,15 +71,26 @@ public class PlayerMovement : NetworkBehaviour
     //called when the object is spawned on the network
     public override void OnNetworkSpawn()
     {
+        //role assignment
+        isShooter = (OwnerClientId % 2 == 0);
         //change color of the mesh based on client id
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];
 
         //check if the player is the owner of the object
         if (!IsOwner) return;
 
+        //find spawn point in the current game scene
+        //prints out debug message if not
+        GameObject spawnPoint = GameObject.Find("SpawnPoint");
+        if (spawnPoint != null)
+        {
+            // move transformation to spawn point
+            transform.position = spawnPoint.transform.position;
+            transform.rotation = spawnPoint.transform.rotation;
+        }
+
         //if the player is the owner of the object
         //enable the camera and the audio listener
-
         playerCamera.enabled = true;
         audioListener.enabled = true;
     }
@@ -85,13 +105,7 @@ public class PlayerMovement : NetworkBehaviour
         // grouped core logic
         HandleMovement();
         HandleRotation();
-
-        //checking inputs (lmb - shoot)
-        if (m != null && m.leftButton.wasPressedThisFrame) 
-        {
-            // request the server to spawn the bullet
-            BulletSpawningServerRpc(cannon.transform.position, cannon.transform.rotation);
-        }
+        HandlePrimaryAction();
 
         //if I is pressed spawn the object
         if (kb != null && kb.iKey.wasPressedThisFrame)
@@ -153,6 +167,29 @@ public class PlayerMovement : NetworkBehaviour
         t.Rotate(Vector3.up, rotDir * rotationSpeed * Time.deltaTime);
     }
 
+    //HandlePrimaryAction() - handles abilities assigned to player (lmb - shoot or dash)
+    void HandlePrimaryAction()
+    {
+        if (m == null || !m.leftButton.wasPressedThisFrame) return;
+
+        if (isShooter)
+        {   //shooter logic, shoots bullets within cooldown set
+            if (Time.time > lastAbilityTime + shootCooldown)
+            {
+                BulletSpawningServerRpc(cannon.transform.position, cannon.transform.rotation);
+                lastAbilityTime = Time.time;
+            }
+        }
+        else
+        {   //squasher logic, dashes within cooldown set
+            if (Time.time > lastAbilityTime + dashCooldown)
+            {
+                rb.AddForce(t.forward * dashForce, ForceMode.VelocityChange);
+                lastAbilityTime = Time.time;
+            }
+        }
+    }
+
     [ServerRpc]
     private void BulletSpawningServerRpc(Vector3 position, Quaternion rotation)
     {
@@ -175,7 +212,7 @@ public class PlayerMovement : NetworkBehaviour
             //this adjusts bullet velocity to shoot upwards
             bRb.linearVelocity += Vector3.up * 2;
             //this adds force to the bullet forwards
-            bRb.AddForce(newBullet.transform.forward * 1500);
+            bRb.AddForce(newBullet.transform.forward * bulletForce);
         }
 
         //destroys the bullet after a certain amount of time has passed from bulletLifeTime (in seconds)

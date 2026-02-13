@@ -13,6 +13,7 @@ public class NetworkManagerUI : MonoBehaviour
 {
     // [SerializeField] attribute is used to make the private variables accessible
     // within the Unity editor without making them public
+    [SerializeField] private GameObject gameLogo;
     [SerializeField] private Button host_btn;
     [SerializeField] private Button client_btn;
 
@@ -30,6 +31,9 @@ public class NetworkManagerUI : MonoBehaviour
 
     private void Awake()
     {
+        //if this is the first one, make it stay alive
+        DontDestroyOnLoad(this.gameObject);
+
         // add a listener to the host button
         host_btn.onClick.AddListener(() =>
         {
@@ -62,6 +66,9 @@ public class NetworkManagerUI : MonoBehaviour
         host_btn.gameObject.SetActive(false);
         client_btn.gameObject.SetActive(false);
         joinCodeInputField.gameObject.SetActive(false);
+
+        //hide logo when the game starts
+            gameLogo.SetActive(false);
     }
 
     // Start host relay
@@ -87,12 +94,16 @@ public class NetworkManagerUI : MonoBehaviour
         // set the relay server data
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(serverData);
 
-        // start the host
-        NetworkManager.Singleton.StartHost();
+        // start the host, this if statement checks if its active.
+        if (NetworkManager.Singleton.StartHost())
+        {
+            // display the join code
+            joinCodeText.text = joinCode;
+            HideUI();
 
-        // display the join code
-        joinCodeText.text = joinCode;
-        HideUI();
+            // this ensures all clients follow the host and players spawn in the right place.
+            NetworkManager.Singleton.SceneManager.LoadScene("SampleScene", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
     }
 
     // start client relay
