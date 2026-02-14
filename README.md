@@ -5,12 +5,19 @@ Assignment 2 - networking game
 Team Members: Mateo Castillo, Harini Solaidurairaj, Muhammad Zeeshan
 
 Formal Elements:
-Players: Multiple players vs Game
+
+Players: Multiple players vs Game 
+
 Objectives: Defeat Spider enemies while protecting hardware components 
+
 Procedures: The players will look around for enemies and use cannons to shoot enemies or bump into them to kill them
+
 Rules: Some players get a cannon, some players will have to use their character to bump into bugs. Bugs will go towards the hardware to damage it. 
+
 Resources: Cannon, bullets 
+
 Conflict: Enemy bugs are trying to steal/destroy hardware 
+
 Boundaries: The players have a play space that they can not leave and the players are protecting hardware within walls
 Outcome: The players need to kill the bugs so they get a good score before the timer ends 
 
