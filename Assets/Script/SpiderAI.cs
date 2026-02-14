@@ -4,26 +4,24 @@ using Unity.Netcode;
 
 public class SpiderAI : NetworkBehaviour
 {
-    public Transform target; 
     private NavMeshAgent agent;
 
-    void Start()
+    void Awake()
     {
+        //get reference to agent
         agent = GetComponent<NavMeshAgent>();
-
-        if (IsServer && target != null)
-        {
-            agent.SetDestination(target.position);
-        }
     }
 
-    void Update()
+    public override void OnNetworkSpawn()
     {
-        if (!IsServer) return; 
+        //only server logic
+        if (!IsServer) return;
 
+        //find target and set destination once
+        GameObject target = GameObject.Find("ServerRoomTarget");
         if (target != null)
         {
-            agent.SetDestination(target.position);
+            agent.SetDestination(target.transform.position);
         }
     }
 }

@@ -63,12 +63,11 @@ public class NetworkManagerUI : MonoBehaviour
     //HideUI() - helper method to clear the screen of buttons and input field
     private void HideUI()
     {
+        //hide buttons, input field, and logo when game starts
         host_btn.gameObject.SetActive(false);
         client_btn.gameObject.SetActive(false);
         joinCodeInputField.gameObject.SetActive(false);
-
-        //hide logo when the game starts
-            gameLogo.SetActive(false);
+        gameLogo.SetActive(false);
     }
 
     // Start host relay

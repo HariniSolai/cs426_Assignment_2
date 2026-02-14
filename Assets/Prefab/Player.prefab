@@ -372,7 +372,7 @@ MonoBehaviour:
   colors:
   - {r: 0.22331783, g: 0.24887906, b: 0.9622642, a: 1}
   - {r: 0.93207544, g: 0.5734493, b: 0.32182977, a: 1}
-  spawnedPrefab: {fileID: 110427889724667761, guid: 740728f854d793848a530ac50ca86174, type: 3}
+  spawnedPrefab: {fileID: 3741538491665481681, guid: 4fcc3965303ceb245939035f3229f2fa, type: 3}
   audioListener: {fileID: 3247687023773720070}
   playerCamera: {fileID: 7067514492782104373}
 --- !u!114 &1333344251541607148

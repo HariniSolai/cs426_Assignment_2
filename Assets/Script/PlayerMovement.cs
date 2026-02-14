@@ -34,7 +34,7 @@ public class PlayerMovement : NetworkBehaviour
     //header for adjusting network configurations
     [Header("Network Settings")]
     public List<Color> colors = new List<Color>(); //list of colors for player identification
-    private bool isShooter; //boolean to assign role of player
+    public bool isShooter; //boolean to assign role of player
     private float lastAbilityTime; //time for tracking the last use of assigned ability
     
     //getting the reference to the prefab
@@ -73,6 +73,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         //role assignment
         isShooter = (OwnerClientId % 2 == 0);
+
         //change color of the mesh based on client id
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];
 
@@ -102,30 +103,10 @@ public class PlayerMovement : NetworkBehaviour
         //makes sure the script is only executed on the owners and not on other prefabs
         if (!IsOwner) return;
 
-        // grouped core logic
+        //grouped core logic
         HandleMovement();
         HandleRotation();
         HandlePrimaryAction();
-
-        //if I is pressed spawn the object
-        if (kb != null && kb.iKey.wasPressedThisFrame)
-        {
-            // instantiate the object
-            instantiatedPrefab = Instantiate(spawnedPrefab);
-            // spawn it on the scene
-            instantiatedPrefab.GetComponent<NetworkObject>().Spawn(true);
-        }
-
-        //if J is pressed destroy the object
-        if (kb != null && kb.jKey.wasPressedThisFrame)
-        {
-            if (instantiatedPrefab != null)
-            {
-                //despawn and destroy the unit across the network
-                instantiatedPrefab.GetComponent<NetworkObject>().Despawn(true);
-                Destroy(instantiatedPrefab);
-            }
-        }
     }
 
     //HandleMovement() - handles character movement with speed capping
@@ -215,8 +196,23 @@ public class PlayerMovement : NetworkBehaviour
             bRb.AddForce(newBullet.transform.forward * bulletForce);
         }
 
+        //add a collision handler to the bullet dynamically
+        //this detects any surface and destroys it immediately
+        var collider = newBullet.AddComponent<BulletImpact>();
+
         //destroys the bullet after a certain amount of time has passed from bulletLifeTime (in seconds)
         //this is cruicial and beneficial for performance (no excess objects in scene)
         Destroy(newBullet, bulletLifetime);
+    }
+
+    //nested class to handle the impact logic
+    //this stays inside playermovement for easy management of bullet collission
+    private class BulletImpact : MonoBehaviour 
+    {
+        private void OnTriggerEnter(Collider other)
+        {
+            //destroy the local bullet instance on impact
+            Destroy(gameObject);
+        }
     }
 }
