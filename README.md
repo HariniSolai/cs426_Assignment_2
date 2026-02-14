@@ -19,6 +19,7 @@ Resources: Cannon, bullets
 Conflict: Enemy bugs are trying to steal/destroy hardware 
 
 Boundaries: The players have a play space that they can not leave and the players are protecting hardware within walls
+
 Outcome: The players need to kill the bugs so they get a good score before the timer ends 
 
 Multiplayer Aspect: One player stays near the hardware on the inside of the walls to defeat enemies there. The other player will be defending from enemies outside the walls. The players must work together as there will be too many bugs for one player to handle successfully and the players will have to communciate to cover more ground and eliminate as many possible bugs.
