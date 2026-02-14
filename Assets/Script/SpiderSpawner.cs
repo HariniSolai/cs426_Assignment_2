@@ -4,19 +4,30 @@ using UnityEngine.AI;
 
 public class SpiderSpawner : NetworkBehaviour
 {
-    [SerializeField] private GameObject spiderPrefab;  //spider prefab to spawn
+    //singleton approach for spider spawner
+    public static SpiderSpawner Instance;
+
+    //header for configuring spider prefabs
+    [Header("Spider Prefabs")]
+    public GameObject[] spiderPrefabs; //array to hold both green and brown types
     
-    //headers for retrieving boxcolider reference on spawning area
+    //headers for retrieving boxcollider reference on spawning/safe areas
     [Header("Area References")]
     [SerializeField] private BoxCollider spawnArea; //box used to define the total spawnable area
     [SerializeField] private BoxCollider safeZone; //box used to block spiders from spawning (server room)
 
+    //header for configuring spawning rate of spiders
     [Header("Settings")]
     [SerializeField] private float spawnDelay = 3f; //cooldown between spawns
     
     private Bounds spawnBounds;
     private Bounds safeBounds;
     private float lastSpawn;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -32,29 +43,31 @@ public class SpiderSpawner : NetworkBehaviour
     void Update()
     {
         //only server handles spawning
-        if (!IsServer) return;
+        if (!IsServer || NetworkManager.Singleton == null) return;
 
 
-        //check if the network manager still exists (prevents error on exit)
-        if (NetworkManager.Singleton == null) return;
+        //check if scoremanager exists and if the match has actually started or has ended
+        if (ScoreManager.Instance == null || !ScoreManager.Instance.isGameStarted || ScoreManager.Instance.gameEnded) return;
 
-        //check for players and timer
-        if (NetworkManager.Singleton.ConnectedClientsList.Count >= 1)
+        //spawn logic for spiders based on spawnDelay set
+        if (Time.time > lastSpawn + spawnDelay)
         {
-            if (ScoreManager.Instance.gameEnded) return;
-            if (Time.time > lastSpawn + spawnDelay)
-            {
-                Spawn();
-                lastSpawn = Time.time;
-            }
+            Spawn();
+            lastSpawn = Time.time;
         }
     }
 
     //Spawn() - function to spawn spiders based on a random valid point within the spawnBounds
     void Spawn()
     {
+        //failsafe if no spider prefabs assigned to spiderPrefabs GameObject array
+        if (spiderPrefabs.Length == 0) return;
 
-        //pick a random spot inside the captured box boundaries
+        //pick random prefab from array
+        int randomIndex = Random.Range(0, spiderPrefabs.Length);
+        GameObject selectedPrefab = spiderPrefabs[randomIndex];
+
+        //pick a random spot inside the spawn boundaries
         Vector3 randomPoint = new Vector3(
             Random.Range(spawnBounds.min.x, spawnBounds.max.x),
             spawnBounds.center.y,
@@ -68,7 +81,7 @@ public class SpiderSpawner : NetworkBehaviour
             if (safeZone != null && safeBounds.Contains(hit.position)) return;
 
             //instantiate and sync across network
-            GameObject spider = Instantiate(spiderPrefab, hit.position, Quaternion.identity);
+            GameObject spider = Instantiate(selectedPrefab, hit.position, Quaternion.identity);
             spider.GetComponent<NetworkObject>().Spawn();
         }
     }
@@ -91,4 +104,7 @@ public class SpiderSpawner : NetworkBehaviour
             Gizmos.DrawCube(safeZone.bounds.center, safeZone.bounds.size);
         }
     }
+
+    //GetSafeBounds() - gets safety bounds for brown spiders that enter the server room
+    public Bounds GetSafeBounds() { return safeBounds; } // helper for the spiders
 }

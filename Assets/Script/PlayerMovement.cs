@@ -80,6 +80,15 @@ public class PlayerMovement : NetworkBehaviour
         //check if the player is the owner of the object
         if (!IsOwner) return;
 
+        //determine class name
+        string myClass = isShooter ? "SHOOTER" : "SQUASHER"; 
+        
+        //tells the manager to update for client
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.SetPlayerClassUI(myClass);
+        }
+
         //find spawn point in the current game scene
         //prints out debug message if not
         GameObject spawnPoint = GameObject.Find("SpawnPoint");

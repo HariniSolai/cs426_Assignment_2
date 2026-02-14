@@ -2649,7 +2649,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpiderSpawner
   ShowTopMostFoldoutHeaderGroup: 1
-  spiderPrefab: {fileID: 3741538491665481681, guid: 4fcc3965303ceb245939035f3229f2fa, type: 3}
+  spiderPrefabs:
+  - {fileID: 3741538491665481681, guid: 4fcc3965303ceb245939035f3229f2fa, type: 3}
+  - {fileID: 164996757166684434, guid: 50855e3e3e1bdad40bf1264e10a944db, type: 3}
   spawnArea: {fileID: 174189027}
   safeZone: {fileID: 812489751}
   spawnDelay: 2
