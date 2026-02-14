@@ -22,7 +22,7 @@ public class Target : NetworkBehaviour
     // so we need to use ServerRpc
     // we also need to add RequireOwnership = false
     // because we want to destroy the object even if the client is not the owner
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void DestroyTargetServerRpc()
     {
         //despawn

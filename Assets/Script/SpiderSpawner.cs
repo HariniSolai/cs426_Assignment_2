@@ -47,7 +47,7 @@ public class SpiderSpawner : NetworkBehaviour
 
 
         //check if scoremanager exists and if the match has actually started or has ended
-        if (ScoreManager.Instance == null || !ScoreManager.Instance.isGameStarted || ScoreManager.Instance.gameEnded) return;
+        if (ScoreManager.Instance == null || !ScoreManager.Instance.isGameStarted.Value || ScoreManager.Instance.gameEnded.Value) return;
 
         //spawn logic for spiders based on spawnDelay set
         if (Time.time > lastSpawn + spawnDelay)

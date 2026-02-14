@@ -21,14 +21,14 @@ public class SpiderHealth : NetworkBehaviour
 
         if (player != null){
             //check if squasher role
-            if (!player.isShooter){
+            if (!player.isShooter.Value){
                 Debug.Log($"spider squashed by {other.gameObject.name}");
                 DestroySpiderServerRpc();
             }
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void DestroySpiderServerRpc()
     {
         //check if already despawning

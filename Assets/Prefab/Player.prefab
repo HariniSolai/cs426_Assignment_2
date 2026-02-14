@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2027137761
+  GlobalObjectIdHash: 2178445207
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -372,6 +372,9 @@ MonoBehaviour:
   colors:
   - {r: 0.22331783, g: 0.24887906, b: 0.9622642, a: 1}
   - {r: 0.93207544, g: 0.5734493, b: 0.32182977, a: 1}
+  - {r: 0.5685989, g: 0.93333334, b: 0.32156867, a: 1}
+  - {r: 0.9607843, g: 0.22352937, b: 0.57389593, a: 1}
+  isShooter: 0
   spawnedPrefab: {fileID: 3741538491665481681, guid: 4fcc3965303ceb245939035f3229f2fa, type: 3}
   audioListener: {fileID: 3247687023773720070}
   playerCamera: {fileID: 7067514492782104373}

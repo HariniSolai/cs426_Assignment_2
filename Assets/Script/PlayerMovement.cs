@@ -34,7 +34,7 @@ public class PlayerMovement : NetworkBehaviour
     //header for adjusting network configurations
     [Header("Network Settings")]
     public List<Color> colors = new List<Color>(); //list of colors for player identification
-    public bool isShooter; //boolean to assign role of player
+    public NetworkVariable<bool> isShooter = new NetworkVariable<bool>(false); //boolean to assign role of player
     private float lastAbilityTime; //time for tracking the last use of assigned ability
     
     //getting the reference to the prefab
@@ -72,16 +72,21 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         //role assignment
-        isShooter = (OwnerClientId % 2 == 0);
+        isShooter.Value = (OwnerClientId % 2 == 0);
 
         //change color of the mesh based on client id
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];
 
         //check if the player is the owner of the object
-        if (!IsOwner) return;
+        if (!IsOwner)
+        {
+            if (playerCamera) playerCamera.enabled = false;
+            if (audioListener) audioListener.enabled = false;
+            return;
+        }
 
         //determine class name
-        string myClass = isShooter ? "SHOOTER" : "SQUASHER"; 
+        string myClass = isShooter.Value ? "SHOOTER" : "SQUASHER"; 
         
         //tells the manager to update for client
         if (ScoreManager.Instance != null)
@@ -101,9 +106,10 @@ public class PlayerMovement : NetworkBehaviour
 
         //if the player is the owner of the object
         //enable the camera and the audio listener
-        playerCamera.enabled = true;
-        audioListener.enabled = true;
+        if (playerCamera) playerCamera.enabled = true;
+        if (audioListener) audioListener.enabled = true;
     }
+    
 
     //Update() - method called once per frame
     void Update()
@@ -162,7 +168,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (m == null || !m.leftButton.wasPressedThisFrame) return;
 
-        if (isShooter)
+        if (isShooter.Value)
         {   //shooter logic, shoots bullets within cooldown set
             if (Time.time > lastAbilityTime + shootCooldown)
             {

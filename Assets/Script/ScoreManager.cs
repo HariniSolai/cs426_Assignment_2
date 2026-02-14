@@ -13,13 +13,14 @@ public class ScoreManager : NetworkBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI statusText; 
     public TextMeshProUGUI brownSpiderText;
-    public TextMeshProUGUI greenSpiderText; // new reference for green spiders
+    public TextMeshProUGUI greenSpiderText;
 
+    //network variables for proper UI updates
     private NetworkVariable<int> score = new NetworkVariable<int>(100);
     private NetworkVariable<float> timeRemaining = new NetworkVariable<float>(90f);
+    public NetworkVariable<bool> isGameStarted = new NetworkVariable<bool>(false);
 
-    public bool isGameStarted = false;
-    public bool gameEnded = false;
+    public NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false);
     private float nextCheckTime;
 
     //Awake() - set singleton instance
@@ -103,30 +104,30 @@ public class ScoreManager : NetworkBehaviour
         if (!IsSpawned || NetworkManager.Singleton == null) return;
 
         //check for at least 2 players to flip the start switch
-        if (IsServer && !isGameStarted)
+        if (IsServer && !isGameStarted.Value)
         {
             if (NetworkManager.Singleton.ConnectedClientsList.Count >= 2)
             {
-                isGameStarted = true;
+                isGameStarted.Value = true;
             }
         }
 
         //show placeholder and block logic if match hasn't started
-        if (!isGameStarted)
+        if (!isGameStarted.Value)
         {
             if (timerText) timerText.text = "??:??";
             return;
         }
 
         //update total amount of spiders withing scene
-        if (!gameEnded && Time.time >= nextCheckTime)
+        if (!gameEnded.Value && Time.time >= nextCheckTime)
         {
             UpdateSpiderCount();
             nextCheckTime = Time.time + 0.5f;
         }
 
         //return from loop if no longer updating
-        if (!IsServer || gameEnded) return;
+        if (!IsServer || gameEnded.Value) return;
 
         //endgame check, while score is above 0 or time remaining is above 0
         if (score.Value > 0 && timeRemaining.Value > 0)
@@ -181,14 +182,14 @@ public class ScoreManager : NetworkBehaviour
     }
 
     //IncreaseScoreServerRpc() - add to score if game is active
-    [ServerRpc(RequireOwnership = false)]
-    public void IncreaseScoreServerRpc(int amount) { if (!gameEnded) score.Value += amount; }
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void IncreaseScoreServerRpc(int amount) { if (!gameEnded.Value) score.Value += amount; }
 
     //DecreaseScoreServerRpc() - subtract from score and check for loss
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void DecreaseScoreServerRpc(int amount)
     {
-        if (gameEnded) return;
+        if (gameEnded.Value) return;
         score.Value -= amount;
         if (score.Value <= 0)
         {
@@ -201,7 +202,7 @@ public class ScoreManager : NetworkBehaviour
     [ClientRpc]
     private void TriggerWinClientRpc()
     {
-        gameEnded = true;
+        gameEnded.Value = true;
 
         statusText = statusText ?? FindText("StatusText");
         if (statusText != null)
@@ -222,7 +223,7 @@ public class ScoreManager : NetworkBehaviour
     [ClientRpc]
     private void TriggerGameOverClientRpc()
     {
-        gameEnded = true;
+        gameEnded.Value = true;
 
         statusText = statusText ?? FindText("StatusText");
         if (statusText != null)

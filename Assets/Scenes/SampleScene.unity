@@ -568,7 +568,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 70, y: 1, z: 70}
+  m_Size: {x: 95, y: 1, z: 90}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &174189028
 MeshRenderer:
@@ -5051,7 +5051,7 @@ Transform:
   m_GameObject: {fileID: 1146046340}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.75, y: -0.5, z: 7}
+  m_LocalPosition: {x: 0, y: 0, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5774,11 +5774,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   ShowTopMostFoldoutHeaderGroup: 1
+  classText: {fileID: 0}
   scoreText: {fileID: 0}
   timerText: {fileID: 0}
   statusText: {fileID: 0}
-  spiderTrackerText: {fileID: 0}
-  gameEnded: 0
+  brownSpiderText: {fileID: 0}
+  greenSpiderText: {fileID: 0}
+  isGameStarted:
+    m_InternalValue: 0
+  gameEnded:
+    m_InternalValue: 0
 --- !u!1001 &1391179203
 PrefabInstance:
   m_ObjectHideFlags: 0
