@@ -14,7 +14,7 @@ public class ScoreManager : NetworkBehaviour
     public TextMeshProUGUI spiderTrackerText;
 
     private NetworkVariable<int> score = new NetworkVariable<int>(100);
-    private NetworkVariable<float> timeRemaining = new NetworkVariable<float>(30f);
+    private NetworkVariable<float> timeRemaining = new NetworkVariable<float>(90f);
     public bool gameEnded = false;
     private float nextCheckTime;
 
